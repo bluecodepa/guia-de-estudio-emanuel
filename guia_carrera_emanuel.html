@@ -1,0 +1,690 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Career Guide · Senior Infrastructure Engineer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#0a0e17;--surface:#111827;--surface2:#0a0e17;--border:#1e293b;--text:#e2e8f0;--text2:#cbd5e1;--text3:#94a3b8;--text4:#64748b;--text5:#475569;--green:#00ff88;--blue:#00d4ff;--red:#ff6b6b;--yellow:#ffd93d;--purple:#c084fc;--link:#60a5fa;--font:'Outfit',sans-serif;--mono:'JetBrains Mono','Fira Code',monospace}
+body{background:var(--bg);color:var(--text);font-family:var(--font);line-height:1.6;min-height:100vh}
+::-webkit-scrollbar{width:5px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+@keyframes slideIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+@keyframes glow{0%,100%{box-shadow:0 0 15px rgba(0,255,136,.12)}50%{box-shadow:0 0 30px rgba(0,255,136,.25)}}
+
+/* ═══ HEADER ═══ */
+.header{background:linear-gradient(180deg,#0f172a,var(--bg));border-bottom:1px solid var(--border);padding:24px 20px 18px;position:sticky;top:0;z-index:100;backdrop-filter:blur(12px)}
+.header-inner{max-width:860px;margin:0 auto}
+.header-top{display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:10px}
+.header-tag{font-family:var(--mono);color:var(--green);font-size:10px;letter-spacing:3px;font-weight:600;margin-bottom:3px}
+.header h1{font-size:20px;font-weight:800;color:#f8fafc;letter-spacing:-.5px}
+.header-sub{color:var(--text5);font-size:12px;margin-top:2px;font-family:var(--mono)}
+.header-actions{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.saving-indicator{color:var(--yellow);font-size:10px;font-family:var(--mono);animation:pulse 1s infinite}
+.btn-icon{background:transparent;border:1px solid #334155;color:var(--text3);padding:5px 10px;border-radius:5px;font-size:11px;cursor:pointer;font-family:var(--mono);transition:background .15s}
+.btn-icon:hover{background:var(--border)}
+.btn-reset{background:transparent;border:1px solid #ef444433;color:#ef4444;padding:5px 10px;border-radius:5px;font-size:10px;cursor:pointer;font-family:var(--mono);transition:background .15s}
+.btn-reset:hover{background:#ef444411}
+.progress-bar-wrap{margin-top:14px}
+.progress-labels{display:flex;justify-content:space-between;margin-bottom:5px;font-family:var(--mono);font-size:11px}
+.progress-label-left{color:var(--text5)}
+.progress-label-right{color:var(--green);font-weight:600}
+.progress-track{height:5px;background:var(--border);border-radius:3px;overflow:hidden}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--green),var(--blue));border-radius:3px;transition:width .5s ease}
+.progress-fill.glowing{animation:glow 3s infinite}
+
+/* ═══ STATS ═══ */
+.stats-panel{max-width:860px;margin:0 auto;padding:14px 20px 0;animation:slideIn .25s ease}
+.stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:8px}
+.stat-card{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:10px 12px;cursor:pointer;transition:border-color .2s}
+.stat-card:hover{border-color:#334155}
+.stat-card.complete{border-color:color-mix(in srgb,var(--phase-color) 35%,transparent)}
+.stat-phase{font-size:9px;font-family:var(--mono);font-weight:600;letter-spacing:1px}
+.stat-pct{font-size:22px;font-weight:800;color:#f8fafc;margin:2px 0}
+.stat-count{font-size:10px;color:var(--text5);font-family:var(--mono)}
+.stat-bar{height:2px;background:var(--border);border-radius:1px;margin-top:6px;overflow:hidden}
+.stat-bar-fill{height:100%;border-radius:1px;transition:width .4s}
+
+/* ═══ TABS ═══ */
+.tabs{max-width:860px;margin:0 auto;padding:14px 20px 0;display:flex;gap:4px;overflow-x:auto}
+.tab{background:transparent;border:1px solid var(--border);border-bottom:1px solid var(--border);color:var(--text4);padding:7px 12px;border-radius:7px 7px 0 0;font-size:11px;font-weight:400;cursor:pointer;font-family:var(--mono);white-space:nowrap;transition:all .15s}
+.tab:hover{background:var(--border)}
+.tab.active{background:var(--surface);font-weight:700;border-bottom:2px solid currentColor}
+.tab .tab-pct{margin-left:5px;opacity:.5;font-size:9px}
+
+/* ═══ CONTENT ═══ */
+.content{max-width:860px;margin:0 auto;padding:0 20px 40px}
+.phase-banner{background:var(--surface);border-radius:0 8px 8px 8px;padding:16px 20px;margin-bottom:12px}
+.phase-banner-inner{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px}
+.phase-title{font-size:16px;font-weight:800;letter-spacing:.5px}
+.phase-sub{color:var(--text4);font-size:12px;margin-top:1px}
+.phase-badge{padding:4px 12px;border-radius:16px;font-family:var(--mono);font-size:11px;font-weight:600}
+
+/* ═══ MODULES ═══ */
+.module{background:var(--surface);border:1px solid var(--border);border-radius:8px;margin-bottom:8px;overflow:hidden;transition:border-color .3s}
+.module.complete{border-color:color-mix(in srgb,var(--phase-color) 25%,transparent)}
+.module-header{width:100%;background:transparent;border:none;color:var(--text);padding:14px 16px;cursor:pointer;text-align:left;display:flex;align-items:center;gap:12px;transition:background .15s;font-family:var(--font)}
+.module-header:hover{background:var(--border)}
+.module-icon{font-size:22px;flex-shrink:0}
+.module-info{flex:1;min-width:0}
+.module-top{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:4px}
+.module-name{font-weight:700;font-size:14px}
+.module-weeks{color:var(--text5);font-size:11px;font-family:var(--mono);margin-left:8px}
+.module-progress{font-family:var(--mono);font-size:11px;font-weight:600}
+.module-arrow{transition:transform .2s;color:var(--text5);font-size:10px;margin-left:8px}
+.module-arrow.open{transform:rotate(180deg)}
+.module-bar{height:2px;background:var(--surface2);border-radius:1px;margin-top:8px;overflow:hidden}
+.module-bar-fill{height:100%;border-radius:1px;transition:width .4s}
+
+/* ═══ EXPANDED ═══ */
+.module-body{padding:0 16px 16px;animation:slideIn .2s ease}
+.mark-all-row{display:flex;justify-content:flex-end;margin-bottom:8px}
+.btn-mark-all{background:transparent;padding:3px 10px;border-radius:4px;font-size:10px;cursor:pointer;font-family:var(--mono);transition:background .15s}
+.btn-mark-all:hover{background:var(--surface2)}
+
+.section-box{background:var(--surface2);border-radius:6px;padding:10px 14px;margin-bottom:10px}
+.section-label{font-size:10px;font-family:var(--mono);font-weight:600;margin-bottom:8px;letter-spacing:1.5px}
+
+.topic-row{display:flex;align-items:flex-start;gap:9px;padding:7px 4px;border-radius:4px;cursor:pointer;transition:all .15s;user-select:none}
+.topic-row:hover{background:var(--surface)}
+.topic-row.done{opacity:.5}
+.checkbox{min-width:18px;height:18px;border-radius:3px;border:1.5px solid #334155;display:flex;align-items:center;justify-content:center;margin-top:1px;flex-shrink:0;transition:all .15s}
+.checkbox.checked{border-color:var(--green);background:#00ff8818}
+.checkbox.checked::after{content:"✓";color:var(--green);font-size:11px;font-weight:800}
+.topic-text{font-size:12.5px;line-height:1.5}
+.topic-text.done{text-decoration:line-through;color:var(--text5)}
+
+.resources-box{border-left:2px solid color-mix(in srgb,var(--phase-color) 20%,transparent)}
+.resource-link{display:block;margin-bottom:5px}
+.resource-link a{color:var(--link);text-decoration:none;font-size:12px;transition:color .15s}
+.resource-link a:hover{color:#93c5fd}
+.resource-arrow{color:#334155;margin-right:6px}
+
+.project-box{border-left:2px solid #00ff8833}
+.project-text{font-size:12.5px;line-height:1.55;color:var(--text3)}
+
+/* ═══ FOOTER ═══ */
+.footer{text-align:center;padding:28px 0 8px;margin-top:24px}
+.footer-text{font-family:var(--mono);font-size:10px;color:var(--border)}
+
+/* ═══ LOADING ═══ */
+.loading{min-height:100vh;display:flex;align-items:center;justify-content:center;background:var(--bg);color:var(--green);font-family:var(--mono)}
+.loading-icon{font-size:32px;margin-bottom:12px;animation:pulse 1.5s infinite}
+
+@media(max-width:600px){
+  .header h1{font-size:17px}
+  .stats-grid{grid-template-columns:repeat(auto-fit,minmax(100px,1fr))}
+  .module-weeks{display:none}
+}
+</style>
+</head>
+<body>
+
+<div id="app"></div>
+
+<script>
+// ═══════════════════════════════════════
+// DATA
+// ═══════════════════════════════════════
+const STORAGE_KEY = "infra-career-progress-v1";
+
+const PHASES = [
+  {
+    id:"p1",phase:1,title:"FUNDAMENTOS",months:"Abril – Julio 2026",color:"#00ff88",
+    modules:[
+      {id:"m1",title:"Linux Profundo",weeks:"Sem 1–4",icon:"🐧",
+        topics:[
+          {id:"t1_1",text:"Sistemas de archivos: inodes, ext4, XFS, mount points, fdisk, LVM"},
+          {id:"t1_2",text:"Procesos: fork, exec, signals, cgroups, OOM killer"},
+          {id:"t1_3",text:"Gestión de memoria: virtual, swap, page cache"},
+          {id:"t1_4",text:"Usuarios y permisos: UID/GID, sudo, ACLs, SELinux basics"},
+          {id:"t1_5",text:"Systemd: services, timers, unit files, journalctl"},
+          {id:"t1_6",text:"Package managers: apt, yum/dnf, snap"}
+        ],
+        resources:[
+          {name:"The Linux Command Line (libro gratis)",url:"https://linuxcommand.org/tlcl.php"},
+          {name:"Linux Journey (interactivo)",url:"https://linuxjourney.com"},
+          {name:"OverTheWire Bandit (práctica)",url:"https://overthewire.org/wargames/bandit/"},
+          {name:"man7.org (referencia)",url:"https://man7.org"}
+        ],
+        project:"Configurar un servidor Linux desde cero: usuarios, permisos, particiones LVM, servicios systemd, scripts de backup automatizados."
+      },
+      {id:"m2",title:"Networking Fundamentals",weeks:"Sem 5–8",icon:"🌐",
+        topics:[
+          {id:"t2_1",text:"Modelo OSI y TCP/IP: capas, protocolos, encapsulación"},
+          {id:"t2_2",text:"DNS: resolución, registros (A, CNAME, MX, TXT), dig, nslookup"},
+          {id:"t2_3",text:"HTTP/HTTPS: métodos, headers, TLS handshake, certificados"},
+          {id:"t2_4",text:"Subnetting: CIDR, máscaras, cálculo de subredes"},
+          {id:"t2_5",text:"Firewalls: iptables, nftables, firewalld, reglas básicas"},
+          {id:"t2_6",text:"Herramientas: tcpdump, wireshark, netstat, ss, traceroute, curl"}
+        ],
+        resources:[
+          {name:"Computer Networking (Kurose) - lectures gratis",url:"https://gaia.cs.umass.edu/kurose_ross/online_lectures.htm"},
+          {name:"Subnetting Practice",url:"https://subnettingpractice.com"},
+          {name:"Julia Evans Networking Zines",url:"https://jvns.ca"},
+          {name:"Wireshark docs oficiales",url:"https://www.wireshark.org/docs/"}
+        ],
+        project:"Capturar y analizar tráfico con tcpdump/wireshark. Configurar DNS local, firewall con iptables, y documentar un diagrama de red completo."
+      },
+      {id:"m3",title:"Bash Scripting Avanzado",weeks:"Sem 9–12",icon:"⌨️",
+        topics:[
+          {id:"t3_1",text:"Funciones, arrays, arrays asociativos, parameter expansion"},
+          {id:"t3_2",text:"Process substitution, pipes avanzados, xargs, tee"},
+          {id:"t3_3",text:"Error handling: set -euo pipefail, trap, exit codes"},
+          {id:"t3_4",text:"Debugging: set -x, shellcheck, testing scripts"},
+          {id:"t3_5",text:"Automatización: cron, systemd timers, log rotation, backups"},
+          {id:"t3_6",text:"Integración con APIs: curl + jq para REST APIs"}
+        ],
+        resources:[
+          {name:"Bash Guide (Greg's Wiki)",url:"https://mywiki.wooledge.org/BashGuide"},
+          {name:"ShellCheck (linter online)",url:"https://www.shellcheck.net"},
+          {name:"Advanced Bash Scripting Guide",url:"https://tldp.org/LDP/abs/html/"},
+          {name:"Exercism Bash Track",url:"https://exercism.org/tracks/bash"}
+        ],
+        project:"5 scripts de producción: disk monitor con alertas, service watchdog, backup automático con retención, log analyzer, y certificate renewal checker."
+      },
+      {id:"m4",title:"Git & Version Control",weeks:"Sem 13–16",icon:"🔀",
+        topics:[
+          {id:"t4_1",text:"Git internals: objects, refs, SHA, tree, blob, commit"},
+          {id:"t4_2",text:"Branching strategies: GitFlow, trunk-based, feature flags"},
+          {id:"t4_3",text:"Rebase vs merge, cherry-pick, bisect, reflog"},
+          {id:"t4_4",text:"Hooks: pre-commit, pre-push, commit-msg"},
+          {id:"t4_5",text:"GitHub/GitLab: PRs, code review, CI triggers, protected branches"},
+          {id:"t4_6",text:"Monorepos vs polyrepos, git submodules, git worktree"}
+        ],
+        resources:[
+          {name:"Pro Git Book (gratis)",url:"https://git-scm.com/book/en/v2"},
+          {name:"Learn Git Branching (visual)",url:"https://learngitbranching.js.org"},
+          {name:"GitHub Skills (labs)",url:"https://skills.github.com"},
+          {name:"Oh My Git! (juego)",url:"https://ohmygit.org"}
+        ],
+        project:"Crear un repo con branching strategy, hooks de pre-commit (shellcheck + lint), CI básico con GitHub Actions, y documentación de convenciones."
+      }
+    ]
+  },
+  {
+    id:"p2",phase:2,title:"INFRASTRUCTURE AS CODE",months:"Agosto – Noviembre 2026",color:"#00d4ff",
+    modules:[
+      {id:"m5",title:"Terraform",weeks:"Sem 17–20",icon:"🏗️",
+        topics:[
+          {id:"t5_1",text:"HCL syntax: resources, variables, outputs, locals, data sources"},
+          {id:"t5_2",text:"State management: remote state, locking, import, refresh"},
+          {id:"t5_3",text:"Modules: estructura, reusabilidad, registry público"},
+          {id:"t5_4",text:"Providers: AWS, DigitalOcean, Cloudflare, multi-provider"},
+          {id:"t5_5",text:"Workspaces, environments, tfvars, variable validation"},
+          {id:"t5_6",text:"Best practices: DRY, naming conventions, directory structure"}
+        ],
+        resources:[
+          {name:"Terraform Docs Oficiales",url:"https://developer.hashicorp.com/terraform/docs"},
+          {name:"HashiCorp Learn (tutorials)",url:"https://developer.hashicorp.com/terraform/tutorials"},
+          {name:"Terraform Registry",url:"https://registry.terraform.io"},
+          {name:"Spacelift Blog (patterns)",url:"https://spacelift.io/blog"}
+        ],
+        project:"Infraestructura completa en AWS con Terraform: VPC, subnets, security groups, EC2, RDS, S3, con módulos reutilizables y remote state en S3."
+      },
+      {id:"m6",title:"Ansible",weeks:"Sem 21–24",icon:"⚙️",
+        topics:[
+          {id:"t6_1",text:"Playbooks: tasks, handlers, variables, templates (Jinja2)"},
+          {id:"t6_2",text:"Roles: estructura, galaxy, dependencias, defaults"},
+          {id:"t6_3",text:"Inventories: estático, dinámico (AWS, scripts), grupos"},
+          {id:"t6_4",text:"Modules clave: apt, yum, file, template, service, user, copy"},
+          {id:"t6_5",text:"Vault: encriptación de secretos, best practices"},
+          {id:"t6_6",text:"Testing: molecule, ansible-lint, idempotencia"}
+        ],
+        resources:[
+          {name:"Ansible Docs Oficiales",url:"https://docs.ansible.com"},
+          {name:"Jeff Geerling YouTube",url:"https://www.youtube.com/c/JeffGeerling"},
+          {name:"Ansible for DevOps (libro gratis)",url:"https://www.ansiblefordevops.com"},
+          {name:"KodeKloud Ansible Labs",url:"https://kodekloud.com"}
+        ],
+        project:"Configurar 3+ servidores con Ansible: web server (Nginx), DB (PostgreSQL), monitoring (Prometheus). Roles reutilizables, vault para secrets."
+      },
+      {id:"m7",title:"Docker Core",weeks:"Sem 25–28",icon:"🐳",
+        topics:[
+          {id:"t7_1",text:"Containers vs VMs: namespaces, cgroups, layered filesystem"},
+          {id:"t7_2",text:"Dockerfile: multi-stage builds, caching, .dockerignore"},
+          {id:"t7_3",text:"Networking: bridge, host, overlay, port mapping, DNS interno"},
+          {id:"t7_4",text:"Volumes: bind mounts, named volumes, tmpfs, backup strategies"},
+          {id:"t7_5",text:"Docker Compose: services, depends_on, healthchecks, profiles"},
+          {id:"t7_6",text:"Image optimization: slim bases, distroless, layer caching, scanning"}
+        ],
+        resources:[
+          {name:"Docker Docs Oficiales",url:"https://docs.docker.com"},
+          {name:"Docker Getting Started",url:"https://docs.docker.com/get-started/"},
+          {name:"Play with Docker (labs)",url:"https://labs.play-with-docker.com"},
+          {name:"Dive (image analysis)",url:"https://github.com/wagoodman/dive"}
+        ],
+        project:"Contenerizar app fullstack: frontend (React/Nginx), backend (Node/Python), DB (PostgreSQL), reverse proxy (Traefik). Docker Compose con healthchecks."
+      },
+      {id:"m8",title:"Docker Avanzado & Registry",weeks:"Sem 29–32",icon:"🐋",
+        topics:[
+          {id:"t8_1",text:"Docker Swarm: services, stacks, rolling updates, secrets"},
+          {id:"t8_2",text:"Registry privado: Harbor, Docker Registry, ECR, GHCR"},
+          {id:"t8_3",text:"Security: rootless containers, read-only fs, seccomp, capabilities"},
+          {id:"t8_4",text:"Logging: json-file, fluentd, syslog, log aggregation"},
+          {id:"t8_5",text:"CI/CD con Docker: build en pipelines, layer caching, tagging"},
+          {id:"t8_6",text:"Debugging: docker exec, logs, stats, events, inspect, nsenter"}
+        ],
+        resources:[
+          {name:"Docker Security (OWASP)",url:"https://cheatsheetseries.owasp.org/cheatsheets/Docker_Security_Cheat_Sheet.html"},
+          {name:"Liz Rice Container Security (YT)",url:"https://www.youtube.com/results?search_query=liz+rice+container+security"},
+          {name:"Hadolint (Dockerfile linter)",url:"https://github.com/hadolint/hadolint"},
+          {name:"Docker Bench Security",url:"https://github.com/docker/docker-bench-security"}
+        ],
+        project:"Deploy Docker Swarm 3 nodos con registry privado, secrets management, logging centralizado, y pipeline CI/CD que construye, escanea y despliega."
+      }
+    ]
+  },
+  {
+    id:"p3",phase:3,title:"ORQUESTACIÓN & CLOUD",months:"Diciembre 2026 – Marzo 2027",color:"#ff6b6b",
+    modules:[
+      {id:"m9",title:"Kubernetes Core",weeks:"Sem 33–36",icon:"☸️",
+        topics:[
+          {id:"t9_1",text:"Arquitectura: control plane, etcd, kubelet, kube-proxy, API server"},
+          {id:"t9_2",text:"Workloads: Pods, Deployments, StatefulSets, DaemonSets, Jobs, CronJobs"},
+          {id:"t9_3",text:"Services: ClusterIP, NodePort, LoadBalancer, Ingress Controllers"},
+          {id:"t9_4",text:"Storage: PV, PVC, StorageClass, CSI drivers"},
+          {id:"t9_5",text:"ConfigMaps, Secrets, resource limits, QoS classes"},
+          {id:"t9_6",text:"kubectl mastery: get, describe, logs, exec, port-forward, debug"}
+        ],
+        resources:[
+          {name:"Kubernetes Docs Oficiales",url:"https://kubernetes.io/docs/home/"},
+          {name:"K8s Official Tutorials",url:"https://kubernetes.io/docs/tutorials/"},
+          {name:"KillerCoda K8s Labs",url:"https://killercoda.com/playgrounds/scenario/kubernetes"},
+          {name:"TechWorld with Nana (YT)",url:"https://www.youtube.com/c/TechWorldwithNana"}
+        ],
+        project:"Desplegar app en Minikube: Deployment con replicas, Service, Ingress, ConfigMap, Secrets, PVC, HPA, y rolling updates."
+      },
+      {id:"m10",title:"Kubernetes Avanzado",weeks:"Sem 37–40",icon:"🎛️",
+        topics:[
+          {id:"t10_1",text:"Helm: charts, values, templates, hooks, repositorios"},
+          {id:"t10_2",text:"RBAC: Roles, ClusterRoles, ServiceAccounts, bindings"},
+          {id:"t10_3",text:"Network Policies, Pod Security Standards, OPA/Gatekeeper"},
+          {id:"t10_4",text:"Operators y Custom Resources (CRDs) — conceptos"},
+          {id:"t10_5",text:"Cluster management: upgrades, drain, cordon, taints/tolerations"},
+          {id:"t10_6",text:"Service mesh basics: Istio/Linkerd conceptos, sidecar pattern"}
+        ],
+        resources:[
+          {name:"Helm Docs",url:"https://helm.sh/docs/"},
+          {name:"KodeKloud CKA Course",url:"https://kodekloud.com"},
+          {name:"Kubernetes the Hard Way",url:"https://github.com/kelseyhightower/kubernetes-the-hard-way"},
+          {name:"Learnk8s Blog",url:"https://learnk8s.io/blog"}
+        ],
+        project:"Kubernetes the Hard Way completo. Crear Helm charts, configurar RBAC, Network Policies, y HPA con custom metrics."
+      },
+      {id:"m11",title:"AWS Core Services",weeks:"Sem 41–44",icon:"☁️",
+        topics:[
+          {id:"t11_1",text:"IAM: users, roles, policies, STS, cross-account, MFA"},
+          {id:"t11_2",text:"Networking: VPC, subnets, route tables, NAT, VPN, Transit Gateway"},
+          {id:"t11_3",text:"Compute: EC2, ASG, Launch Templates, Spot, ECS, Lambda"},
+          {id:"t11_4",text:"Storage: S3 (tiers, lifecycle, replication), EBS, EFS"},
+          {id:"t11_5",text:"Database: RDS, Aurora, DynamoDB, ElastiCache"},
+          {id:"t11_6",text:"Load Balancing: ALB, NLB, target groups, health checks, SSL"}
+        ],
+        resources:[
+          {name:"AWS Free Tier",url:"https://aws.amazon.com/free/"},
+          {name:"AWS Docs & Whitepapers",url:"https://docs.aws.amazon.com"},
+          {name:"Adrian Cantrill (YouTube)",url:"https://www.youtube.com/c/LearnCantrill"},
+          {name:"AWS Well-Architected Labs",url:"https://wellarchitectedlabs.com"}
+        ],
+        project:"Arquitectura 3-tier en AWS: VPC multi-AZ, ALB, ASG con EC2, RDS Multi-AZ, S3 para assets, CloudFront CDN, todo con Terraform."
+      },
+      {id:"m12",title:"AWS Avanzado & HA/DR",weeks:"Sem 45–48",icon:"🏛️",
+        topics:[
+          {id:"t12_1",text:"CloudWatch: métricas, alarmas, dashboards, Logs Insights"},
+          {id:"t12_2",text:"Route 53: hosted zones, routing policies, health checks, failover"},
+          {id:"t12_3",text:"EKS: managed K8s, node groups, Fargate, ALB Ingress Controller"},
+          {id:"t12_4",text:"High Availability: multi-AZ, multi-region, RTO/RPO"},
+          {id:"t12_5",text:"Disaster Recovery: backup strategies, pilot light, warm standby"},
+          {id:"t12_6",text:"Cost optimization: Reserved, Savings Plans, right-sizing"}
+        ],
+        resources:[
+          {name:"AWS Architecture Center",url:"https://aws.amazon.com/architecture/"},
+          {name:"AWS Workshops",url:"https://workshops.aws"},
+          {name:"Last Week in AWS (newsletter)",url:"https://www.lastweekinaws.com"},
+          {name:"AWS re:Invent (YouTube)",url:"https://www.youtube.com/c/AWSEventsChannel"}
+        ],
+        project:"Migrar tu app a EKS: cluster con Terraform, Helm deploys, ALB Ingress, CloudWatch monitoring, auto-scaling, y runbook de DR."
+      }
+    ]
+  },
+  {
+    id:"p4",phase:4,title:"OBSERVABILIDAD & SEGURIDAD",months:"Abril – Junio 2027",color:"#ffd93d",
+    modules:[
+      {id:"m13",title:"Monitoring & Observabilidad",weeks:"Sem 49–52",icon:"📊",
+        topics:[
+          {id:"t13_1",text:"Prometheus: arquitectura, PromQL, targets, alerting rules"},
+          {id:"t13_2",text:"Grafana: dashboards, variables, alerting, provisioning as code"},
+          {id:"t13_3",text:"Logging stack: ELK (Elasticsearch, Logstash, Kibana) o Loki+Grafana"},
+          {id:"t13_4",text:"Tracing: OpenTelemetry, Jaeger/Zipkin, distributed tracing"},
+          {id:"t13_5",text:"SLIs, SLOs, SLAs: definición, cálculo, error budgets"},
+          {id:"t13_6",text:"Incident management: on-call, runbooks, postmortems, escalation"}
+        ],
+        resources:[
+          {name:"Prometheus Docs",url:"https://prometheus.io/docs/"},
+          {name:"Grafana Tutorials",url:"https://grafana.com/tutorials/"},
+          {name:"Google SRE Book (gratis)",url:"https://sre.google/sre-book/table-of-contents/"},
+          {name:"OpenTelemetry Docs",url:"https://opentelemetry.io/docs/"}
+        ],
+        project:"Stack de observabilidad: Prometheus + Grafana + Loki para tu cluster K8s. Dashboards, alertas, y runbooks documentados."
+      },
+      {id:"m14",title:"Security & Hardening",weeks:"Sem 53–56",icon:"🔒",
+        topics:[
+          {id:"t14_1",text:"SSH hardening: key-based auth, fail2ban, port knocking, jump hosts"},
+          {id:"t14_2",text:"TLS/SSL: certificados, Let's Encrypt, cert-manager, mTLS"},
+          {id:"t14_3",text:"Secrets management: Vault, AWS Secrets Manager, sealed-secrets"},
+          {id:"t14_4",text:"Container security: image scanning (Trivy), admission controllers"},
+          {id:"t14_5",text:"Network security: VPN (WireGuard), zero trust, VPC endpoints, WAF"},
+          {id:"t14_6",text:"Compliance: CIS benchmarks, audit logging, SIEM basics"}
+        ],
+        resources:[
+          {name:"OWASP Top 10",url:"https://owasp.org/www-project-top-ten/"},
+          {name:"CIS Benchmarks (free PDF)",url:"https://www.cisecurity.org/cis-benchmarks"},
+          {name:"HashiCorp Vault Learn",url:"https://developer.hashicorp.com/vault/tutorials"},
+          {name:"Trivy (scanner)",url:"https://aquasecurity.github.io/trivy/"}
+        ],
+        project:"Hardening completo: SSH bastión, Vault para secrets, Trivy en CI/CD, cert-manager con Let's Encrypt, network policies, y audit CIS."
+      },
+      {id:"m15",title:"CI/CD Pipelines",weeks:"Sem 57–60",icon:"🔄",
+        topics:[
+          {id:"t15_1",text:"GitHub Actions: workflows, jobs, steps, secrets, matrices, reusable"},
+          {id:"t15_2",text:"GitLab CI: stages, jobs, variables, artifacts, environments"},
+          {id:"t15_3",text:"Pipeline patterns: build→test→scan→deploy, blue/green, canary"},
+          {id:"t15_4",text:"ArgoCD / Flux: GitOps principles, declarative deploys, sync"},
+          {id:"t15_5",text:"Testing en pipelines: unit, integration, E2E, smoke, load testing"},
+          {id:"t15_6",text:"Artifact management: versioning, promotion, rollback strategies"}
+        ],
+        resources:[
+          {name:"GitHub Actions Docs",url:"https://docs.github.com/en/actions"},
+          {name:"ArgoCD Docs",url:"https://argo-cd.readthedocs.io"},
+          {name:"GitOps Guide",url:"https://www.gitops.tech"},
+          {name:"CI/CD Best Practices (GitLab)",url:"https://docs.gitlab.com/ee/ci/pipelines/pipeline_architectures.html"}
+        ],
+        project:"Pipeline completo: GitHub Actions build→test→scan(Trivy)→push→deploy a K8s con ArgoCD, con rollback automático."
+      }
+    ]
+  },
+  {
+    id:"p5",phase:5,title:"SENIOR & ARQUITECTURA",months:"Julio – Septiembre 2027",color:"#c084fc",
+    modules:[
+      {id:"m16",title:"System Design & Arquitectura",weeks:"Sem 61–64",icon:"🏰",
+        topics:[
+          {id:"t16_1",text:"Patrones: microservicios, event-driven, CQRS, saga pattern"},
+          {id:"t16_2",text:"Load balancing avanzado: L4 vs L7, consistent hashing, sticky sessions"},
+          {id:"t16_3",text:"Caching: CDN, Redis, application cache, cache invalidation"},
+          {id:"t16_4",text:"Message queues: RabbitMQ, SQS, Kafka conceptos, pub/sub"},
+          {id:"t16_5",text:"Database scaling: replication, sharding, read replicas, pooling"},
+          {id:"t16_6",text:"Capacity planning: load testing (k6), benchmarking, cost modeling"}
+        ],
+        resources:[
+          {name:"System Design Primer (GitHub)",url:"https://github.com/donnemartin/system-design-primer"},
+          {name:"Designing Data-Intensive Apps",url:"https://dataintensive.net"},
+          {name:"ByteByteGo (YouTube)",url:"https://www.youtube.com/c/ByteByteGo"},
+          {name:"k6 Load Testing Docs",url:"https://k6.io/docs/"}
+        ],
+        project:"Diseñar arquitectura de alta disponibilidad: diagramas, decisiones, trade-offs, capacity plan, y runbooks operacionales."
+      },
+      {id:"m17",title:"Performance & Optimization",weeks:"Sem 65–68",icon:"⚡",
+        topics:[
+          {id:"t17_1",text:"Linux performance: perf, strace, ltrace, flamegraphs, profiling"},
+          {id:"t17_2",text:"Network performance: MTU, TCP tuning, keepalive, connection pooling"},
+          {id:"t17_3",text:"Container tuning: resource limits, JVM in containers, init containers"},
+          {id:"t17_4",text:"Database performance: query optimization, indexing, EXPLAIN, slow log"},
+          {id:"t17_5",text:"Cost optimization: spot instances, right-sizing, reserved, FinOps"},
+          {id:"t17_6",text:"Chaos engineering: principios, Chaos Monkey, Litmus, GameDays"}
+        ],
+        resources:[
+          {name:"Brendan Gregg Performance Site",url:"https://www.brendangregg.com"},
+          {name:"USE Method",url:"https://www.brendangregg.com/usemethod.html"},
+          {name:"Netflix Tech Blog",url:"https://netflixtechblog.com"},
+          {name:"Gremlin Chaos Engineering",url:"https://www.gremlin.com/community/tutorials/"}
+        ],
+        project:"Optimizar tu stack: profiling, kernel tuning, DB optimization, load test con k6, y GameDay de chaos engineering documentado."
+      },
+      {id:"m18",title:"Certificación & Portfolio",weeks:"Sem 69–72",icon:"🎯",
+        topics:[
+          {id:"t18_1",text:"AWS Solutions Architect Associate: preparación y simulacros"},
+          {id:"t18_2",text:"CKA (Certified Kubernetes Administrator): labs y práctica"},
+          {id:"t18_3",text:"Portfolio público: GitHub con proyectos documentados, blog técnico"},
+          {id:"t18_4",text:"Technical writing: RFCs, ADRs, postmortems, docs-as-code"},
+          {id:"t18_5",text:"Soft skills: estimación de proyectos, comunicación con stakeholders"},
+          {id:"t18_6",text:"Career strategy: LinkedIn, networking, open source contributions"}
+        ],
+        resources:[
+          {name:"AWS Skill Builder (free exams)",url:"https://explore.skillbuilder.aws"},
+          {name:"Killer.sh CKA Simulator",url:"https://killer.sh"},
+          {name:"ADR GitHub Template",url:"https://adr.github.io"},
+          {name:"Dev.to / Hashnode (blogging)",url:"https://dev.to"}
+        ],
+        project:"Certificarse AWS SAA y/o CKA. Publicar 3+ blog posts técnicos. Portfolio GitHub con README profesional. LinkedIn optimizado."
+      }
+    ]
+  }
+];
+
+// ═══════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════
+let completed = {};
+let activePhase = "p1";
+let expandedModule = null;
+let showStats = false;
+
+const allTopicIds = [];
+PHASES.forEach(p => p.modules.forEach(m => m.topics.forEach(t => allTopicIds.push(t.id))));
+const TOTAL = allTopicIds.length;
+
+function loadProgress() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) completed = JSON.parse(raw);
+  } catch(e) { completed = {}; }
+}
+
+function saveProgress() {
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(completed)); } catch(e) {}
+}
+
+function toggleTopic(id) {
+  if (completed[id]) delete completed[id];
+  else completed[id] = Date.now();
+  saveProgress();
+  render();
+}
+
+function toggleAllInModule(mod) {
+  const allDone = mod.topics.every(t => completed[t.id]);
+  mod.topics.forEach(t => {
+    if (allDone) delete completed[t.id];
+    else if (!completed[t.id]) completed[t.id] = Date.now();
+  });
+  saveProgress();
+  render();
+}
+
+function resetProgress() {
+  if (!confirm("¿Borrar TODO tu progreso? No se puede deshacer.")) return;
+  completed = {};
+  try { localStorage.removeItem(STORAGE_KEY); } catch(e) {}
+  render();
+}
+
+function getModProg(mod) {
+  const d = mod.topics.filter(t => completed[t.id]).length;
+  return { done: d, total: mod.topics.length, pct: Math.round((d / mod.topics.length) * 100) };
+}
+
+function getPhaseProg(phase) {
+  let d = 0, t = 0;
+  phase.modules.forEach(m => m.topics.forEach(tp => { t++; if (completed[tp.id]) d++; }));
+  return { done: d, total: t, pct: t ? Math.round((d / t) * 100) : 0 };
+}
+
+function getTotalProg() {
+  const d = Object.keys(completed).length;
+  return { done: d, total: TOTAL, pct: Math.round((d / TOTAL) * 100) };
+}
+
+// ═══════════════════════════════════════
+// RENDER
+// ═══════════════════════════════════════
+function esc(s) { const d = document.createElement('div'); d.textContent = s; return d.innerHTML; }
+
+function render() {
+  const total = getTotalProg();
+  const phase = PHASES.find(p => p.id === activePhase);
+
+  let html = '';
+
+  // HEADER
+  html += `<div class="header"><div class="header-inner">
+    <div class="header-top">
+      <div>
+        <div class="header-tag">CAREER://INFRASTRUCTURE</div>
+        <h1>Senior Infrastructure Engineer</h1>
+        <div class="header-sub">18 meses · Abr 2026 → Sep 2027 · ${TOTAL} temas · 72 semanas</div>
+      </div>
+      <div class="header-actions">
+        <button class="btn-icon" onclick="showStats=!showStats;render();">${showStats ? '✕' : '📊'}</button>
+        <button class="btn-reset" onclick="resetProgress()">reset</button>
+      </div>
+    </div>
+    <div class="progress-bar-wrap">
+      <div class="progress-labels">
+        <span class="progress-label-left">progreso total</span>
+        <span class="progress-label-right">${total.done}/${total.total} · ${total.pct}%</span>
+      </div>
+      <div class="progress-track">
+        <div class="progress-fill ${total.pct > 0 && total.pct < 100 ? 'glowing' : ''}" style="width:${total.pct}%"></div>
+      </div>
+    </div>
+  </div></div>`;
+
+  // STATS
+  if (showStats) {
+    html += `<div class="stats-panel"><div class="stats-grid">`;
+    PHASES.forEach(p => {
+      const pr = getPhaseProg(p);
+      html += `<div class="stat-card ${pr.pct === 100 ? 'complete' : ''}" style="--phase-color:${p.color}" onclick="activePhase='${p.id}';showStats=false;render();">
+        <div class="stat-phase" style="color:${p.color}">FASE ${p.phase}</div>
+        <div class="stat-pct">${pr.pct}%</div>
+        <div class="stat-count">${pr.done}/${pr.total}</div>
+        <div class="stat-bar"><div class="stat-bar-fill" style="width:${pr.pct}%;background:${p.color}"></div></div>
+      </div>`;
+    });
+    html += `</div></div>`;
+  }
+
+  // TABS
+  html += `<div class="tabs">`;
+  PHASES.forEach(p => {
+    const pr = getPhaseProg(p);
+    const active = p.id === activePhase;
+    html += `<button class="tab ${active ? 'active' : ''}" style="${active ? 'color:'+p.color+';border-bottom-color:'+p.color+';border-color:'+p.color+'44' : ''}" onclick="activePhase='${p.id}';expandedModule=null;render();">
+      ${pr.pct === 100 ? '✓ ' : ''}F${p.phase}<span class="tab-pct">${pr.pct}%</span>
+    </button>`;
+  });
+  html += `</div>`;
+
+  // CONTENT
+  html += `<div class="content">`;
+
+  if (phase) {
+    const pProg = getPhaseProg(phase);
+
+    // Phase banner
+    html += `<div class="phase-banner" style="border:1px solid ${phase.color}18">
+      <div class="phase-banner-inner">
+        <div>
+          <div class="phase-title" style="color:${phase.color}">FASE ${phase.phase}: ${esc(phase.title)}</div>
+          <div class="phase-sub">${esc(phase.months)} · ${phase.modules.length} módulos</div>
+        </div>
+        <div class="phase-badge" style="background:${phase.color}12;border:1px solid ${phase.color}28;color:${phase.color}">${pProg.done}/${pProg.total}</div>
+      </div>
+    </div>`;
+
+    // Modules
+    phase.modules.forEach(mod => {
+      const prog = getModProg(mod);
+      const isExp = expandedModule === mod.id;
+
+      html += `<div class="module ${prog.pct === 100 ? 'complete' : ''}" style="--phase-color:${phase.color}">
+        <button class="module-header" onclick="expandedModule=expandedModule==='${mod.id}'?null:'${mod.id}';render();">
+          <span class="module-icon" style="filter:${prog.pct === 100 ? 'grayscale(0)' : 'grayscale(.3)'}">${mod.icon}</span>
+          <div class="module-info">
+            <div class="module-top">
+              <div><span class="module-name">${esc(mod.title)}</span><span class="module-weeks">${esc(mod.weeks)}</span></div>
+              <div style="display:flex;align-items:center">
+                <span class="module-progress" style="color:${prog.pct === 100 ? '#00ff88' : phase.color}">${prog.pct === 100 ? '✓ ' : ''}${prog.done}/${prog.total}</span>
+                <span class="module-arrow ${isExp ? 'open' : ''}">▼</span>
+              </div>
+            </div>
+            <div class="module-bar"><div class="module-bar-fill" style="width:${prog.pct}%;background:${prog.pct === 100 ? '#00ff88' : phase.color}"></div></div>
+          </div>
+        </button>`;
+
+      if (isExp) {
+        html += `<div class="module-body">
+          <div class="mark-all-row">
+            <button class="btn-mark-all" style="border:1px solid ${phase.color}33;color:${phase.color}" onclick="event.stopPropagation();toggleAllModule('${mod.id}')">
+              ${prog.pct === 100 ? 'desmarcar todo' : 'marcar todo ✓'}
+            </button>
+          </div>`;
+
+        // Topics
+        html += `<div class="section-box"><div class="section-label" style="color:${phase.color}">TEMAS</div>`;
+        mod.topics.forEach(t => {
+          const isDone = !!completed[t.id];
+          html += `<div class="topic-row ${isDone ? 'done' : ''}" onclick="toggleTopic('${t.id}')">
+            <div class="checkbox ${isDone ? 'checked' : ''}"></div>
+            <span class="topic-text ${isDone ? 'done' : ''}">${esc(t.text)}</span>
+          </div>`;
+        });
+        html += `</div>`;
+
+        // Resources
+        html += `<div class="section-box resources-box" style="--phase-color:${phase.color}"><div class="section-label" style="color:#fbbf24">RECURSOS GRATIS</div>`;
+        mod.resources.forEach(r => {
+          html += `<div class="resource-link"><a href="${esc(r.url)}" target="_blank" rel="noopener"><span class="resource-arrow">→</span>${esc(r.name)}</a></div>`;
+        });
+        html += `</div>`;
+
+        // Project
+        html += `<div class="section-box project-box"><div class="section-label" style="color:#00ff88">PROYECTO PRÁCTICO</div>
+          <p class="project-text">${esc(mod.project)}</p>
+        </div>`;
+
+        html += `</div>`; // module-body
+      }
+
+      html += `</div>`; // module
+    });
+  }
+
+  // Footer
+  html += `<div class="footer"><div class="footer-text">built for emanuel · progreso guardado en este navegador</div></div>`;
+  html += `</div>`; // content
+
+  document.getElementById('app').innerHTML = html;
+}
+
+// Global helper for inline onclick
+window.toggleAllModule = function(modId) {
+  const phase = PHASES.find(p => p.modules.some(m => m.id === modId));
+  if (!phase) return;
+  const mod = phase.modules.find(m => m.id === modId);
+  if (!mod) return;
+  toggleAllInModule(mod);
+};
+
+// ═══════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════
+loadProgress();
+render();
+</script>
+</body>
+</html>
